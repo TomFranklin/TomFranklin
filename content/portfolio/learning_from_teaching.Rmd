@@ -1,0 +1,20 @@
+---
+title: "Learning from teaching"
+description: "Lessons from teaching data science to undergraduate Econometrics students"
+date: 2018-03-24T22:58:27Z
+draft: true
+---
+
+Teaching R for Data Science to 2nd year Econometrics students 
+
+\n
+
+
+
+
+
+
+
+In this blog post I'll be learning how to use RMarkdown properly 
+
+> Data science is great 
