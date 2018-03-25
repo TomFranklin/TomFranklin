@@ -2,7 +2,7 @@ baseurl = "https://tomfranklin.netlify.com/"
 title = "Tom Franklin"
 theme = "hugo-creative-portfolio-theme"
 languageCode = "en-uk"
-# Enable comments by entering your Disqus shortname
+# Enable comments by enteringser your Disqus shortname
 disqusShortname = ""
 # Enable Google Analytics by entering your tracking code
 googleAnalytics = ""
