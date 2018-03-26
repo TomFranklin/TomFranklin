@@ -14,7 +14,7 @@ googleAnalytics = ""
   description = "Describe your website"
   copyright = "&copy;2016 Your name or company"
   sidebarAbout = [
-    "I am a statistician, data science enthusiast and economics graduate base in. I work for the Department for Education in Manchester and teach R for data science at Univeristy of Manchester.",
+    "I am a statistician, data science enthusiast and economics graduate based in Manchecter, UK. I work for the Department for Education in Manchester and teach R for data science at Univeristy of Manchester.",
     "United Kingdom"
   ]
   # Contact page
@@ -45,11 +45,8 @@ googleAnalytics = ""
   url = "contact/"
 
   [params.social]
-  facebook      = "full page or profile url in facebook"
-  googleplus    = "full profile url in googleplus"
   email         = "email@example.com"
   twitter       = "full profile url in twitter"
   linkedin      = "full profile url in linkedin"
   stackoverflow = "full profile url in stackoverflow"
-  instagram     = "full profile url in instagram"
   github        = "full profile url in github"
