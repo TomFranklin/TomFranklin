@@ -1,4 +1,4 @@
-baseurl = "https://tomfranklin.co.uk/"
+baseurl = "www.tomfranklin.co.uk/"
 title = "Tom Franklin"
 theme = "hugo-creative-portfolio-theme"
 languageCode = "en-uk"
