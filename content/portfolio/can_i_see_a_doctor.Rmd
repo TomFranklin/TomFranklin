@@ -1,8 +1,11 @@
 ---
-title: "Can I see the doctor, please?"
+date: "2018-05-23"
+title: "Women doctors outnumber men; in only one UK country..."
 description: "Analysing the gender ratio of licensed doctors across UK countries"
-date: 2018-03-24T23:24:14Z
 draft: false
+author: "Tom Franklin"
+showonlyimage: false
+image: "img/portfolio/leaflet-map-doctors-uk.png"
 ---
 
 ```{r, include = FALSE}
@@ -98,7 +101,56 @@ map_pal = colorFactor(c('purple', '#4169e1'), data_for_mapping$majority_gender)
 
 
 
-hoverText <- sprintf("<div style='font-size:12px;width:200px;float:left'>
+hoverText_1 <- sprintf("<div style='font-size:10px;width:120px;float:left'>
+            <span style='font-size:12px;font-weight:bold'>%s</span><br/> 
+            <div style='width:95%%'>
+              <span style='float:left'>Male</span>
+                     <span style='float:right'>Female</span>
+                     <br/>
+                     <span style='color:black;float:left'>%s%%</span>
+                     <span style='color:black;float:right'>%s%%</span><br clear='all'/>
+                     <span style='background:#D4DCF7;width:%s%%;float:left'>&nbsp;</span>
+                     <span style='background:#E7CCFC;width:%s%%;float:right'>&nbsp;</span>
+                     </div>
+                     <br/><span style='font-size:8px'>%s</span>
+                     </div>",
+                      data_for_mapping$SUBUNIT, 
+                      data_for_mapping$Male_prop, data_for_mapping$Female_prop,
+                      data_for_mapping$Male_prop, data_for_mapping$Female_prop,
+                     data_for_mapping$majority_gender) %>%
+  lapply(htmltools::HTML)
+
+
+map_1 <- leaflet(data_for_mapping,
+        options=leafletOptions(attributionControl = FALSE, 
+                               dragging = FALSE, zoomControl = FALSE, minZoom = 4.6, maxZoom = 4.6)) %>%
+  addPolygons(fillColor=~map_pal(data_for_mapping$majority_gender),
+              weight = 1,
+              label = ~hoverText_1,
+              color = "grey",
+              labelOptions = labelOptions(
+                noHide = T, 
+                direction = 'auto',
+                offset = c(-100,-140),
+                #direction='bottom',
+                textOnly = T,
+                style=list(
+                  'background'='rgba(255,255,255,0.95)',
+                  'border-color' = 'rgba(0,0,0,1)',
+                  'border-radius' = '4px',
+                  'border-style' = 'solid',
+                  'border-width' = '4px')),
+              highlightOptions = highlightOptions(weight = 3, bringToFront = TRUE)) %>%
+  setMaxBounds(lat1 = 60, lng1 = 4, lat2 = 50, lng2 = -12) %>%
+  htmlwidgets::onRender(
+    "function(el, t) {
+    var myMap = this;
+    // get rid of the ugly grey background
+    myMap._container.style['background'] = '#ffffff';
+    }") 
+
+
+hoverText_2 <- sprintf("<div style='font-size:12px;width:200px;float:left'>
             <span style='font-size:18px;font-weight:bold'>%s</span><br/> 
             <div style='width:95%%'>
               <span style='float:left'>Male</span>
@@ -117,15 +169,12 @@ hoverText <- sprintf("<div style='font-size:12px;width:200px;float:left'>
                      data_for_mapping$majority_gender) %>%
   lapply(htmltools::HTML)
 
-
-
-
-map <- leaflet(data_for_mapping,
+map_2 <- leaflet(data_for_mapping,
   options=leafletOptions(attributionControl = FALSE, 
   dragging = FALSE, zoomControl = FALSE, minZoom = 5.8, maxZoom = 5.8)) %>%
   addPolygons(fillColor=~map_pal(data_for_mapping$majority_gender),
               weight = 1,
-              label = ~hoverText,
+              label = ~hoverText_2,
               color = "grey",
               labelOptions = labelOptions(
                 offset = c(-100,-140),
@@ -145,30 +194,179 @@ map <- leaflet(data_for_mapping,
     // get rid of the ugly grey background
     myMap._container.style['background'] = '#ffffff';
     }") 
-    
-
+  
 
 ```
 
-The demographics of the medical profession are changing. In 2017, latest data from the General Medical Council showed that the number of licensed doctors in Scotland was greater than those of men for the first time. 
+<b><i> ..., Scotland! This is based on licensed doctor numbers, subject to uncertainty of location of doctors via General Medical Council's (GMC) medical register </i></b>
+
+<b style="color:#8E44AD";>The demographics of the medical profession are changing.</b> In 2017, latest data from the GMC showed that the number of licensed doctors in Scotland was greater than those of men for the first time. 
 
 <div style= "float:right;position: relative; top: -10px;"> 
-```{r, echo = FALSE, warning = FALSE, fig.height = 7.5, fig.width=5, fig.align="right"}
-map
+```{r, echo = FALSE, warning = FALSE, fig.height = 3.15, fig.width=2.98, fig.align="right"}
+map_1
 ```
 </div>
 
 Their annual report, [the state of medical education and practice 2017](https://www.gmc-uk.org/publications/somep2017.asp), showed that 51.01% of all licensed doctors in Scotland were female, relative to just 44.13% in Wales. 
 
-> Scotland is the first UK country to have more licensed female doctors than males. 
-
 This demographic shift highlights the changing medical profession in the UK. Currently XX% of doctors in training, the future of the UK's medical workforce, are female. This suggests that in the future, we are likely to see a female dominated medical profession in the UK.
 
-However, some areas of specialism within medicine may take much longer to see such change. Surgery 
+### Creating the above interactive map in R 
+
+We'll learn how to make the above interactive map step by step to visualise UK countries with majority male and female doctors. This has been inspired by [an excellent rpubs post I found](https://rpubs.com/bhaskarvk/electoral-Map-2016) by Bhaskar V. Karambelkar, which visualises predicted US election results prior to the 2016 election. 
+
+### Process to create interactive map
+
+1) Load libraries and shapefiles and filter for UK countries
+2) Load doctor data and clean
+3) Join data to map
+4) Build map components and final map
+
+<b style="color:#000000";>1.  Load libraries and shapefiles and filter for UK countries</b>
+
+So, there are quite a few packages to load first...
+
+```r
+library(leaflet); library(geojsonio); library(rgdal); library(sp);
+library(dplyr); library(plyr); library(data.table); library(RColorBrewer);
+library(raster); library(ggplot2); library(rgeos); library(readr);
+library(mapproj); library(tictoc); library(ggmap); library(maps);
+library(ggthemes); library(htmlwidgets); library(tidyr);
+```
+
+Once we've done that, we can load up our shapefiles which have come from Natural Earth Mapping. It took quite a while to figure out which map shapefiles I needed to use, but it turned out to be the "map admin units" ones, [with a link here](www.google.co.uk). 
+
+These are for the whole world, so we need to filter for UK countries using the `%like%` function to look for country names (known as SUBUNIT's in our shapefile data) which match UK country names. 
+
+```r
+world_countries_shapefile <- shapefile("shapefiles/ne_10m_admin_0_map_units.shp")
+
+# One way to filter countries is by starting letter of country
+uk_countries = subset(world_world_countries_shapefile, SUBUNIT %like% "England" | 
+                        SUBUNIT%like% "Wales" |
+                        SUBUNIT %like% "Scotland" |
+                        SUBUNIT %like% "Northern Ireland")
+
+# Not sure if this actually helps run the code, but seems to work
+uk_countries <- spTransform(uk_countries, CRS("+proj=longlat +ellps=WGS84"))
+```
+
+Now we have our shapefiles in good shape, we can now move onto analysing the data of doctor numbers in each UK country. 
+
+<b style="color:#000000";>2. Load doctor data and clean</b>
+
+This data is from the GMC's State of Medical Education and Practise 2017 annual report. It's not in the most helpful format for machine reading, so we'll manipulate it to be in a form we can add to our shapefiles. 
+
+```r
+doctor_data <- read.csv("data/doctors.csv")
+
+# Select only 2017 data, necessary variables and put in wide format
+doctor_data %>% 
+  dplyr::filter(Year == 2017) %>% 
+  dplyr::select(Country, Gender, Year, Number) %>%
+  tidyr::spread(Gender, Number) -> doctor_data
+```
+
+R has seen comma's in what we would see as numeric fields and decided that they are characters. Let's remove them and define it as a numeric field. 
+
+```r
+doctor_data$Male <- as.numeric(sub(",", "", doctor_data$Male, fixed = TRUE))
+doctor_data$Female <- as.numeric(sub(",", "", doctor_data$Female, fixed = TRUE))
+```
+
+Now we'll use an ifelse statement to analyse which gender has the greatest number of doctors per country and print a statement saying just that. We'll also add proportions based on total per country (assuming total is male plus female which isn't the case in real life). We're doing this so we have data we can use to have in our hover over tooltip for the map. 
+
+```r
+doctor_data %>%
+  mutate(majority_gender = ifelse(Male > Female, "Majority of doctors are male", 
+                           ifelse(Female > Male, "Majority of doctors are female", "Gender Equality")))  %>%
+  mutate(total = Male + Female) %>%
+  mutate(Male_prop = (Male / total)*100) %>%
+  mutate(Female_prop = (Female / total)*100) -> doctor_data
+```
+
+Final bit of data tidying, rounding numbers and general housekeeping before we add the data to the map and generate the map. 
+
+```r
+# Round proportions to 2.d.p
+doctor_data$Male_prop <- format(round(doctor_data$Male_prop, 2), nsmall = 2)
+doctor_data$Female_prop <- format(round(doctor_data$Female_prop, 2), nsmall = 2)
+
+# General tidying
+doctor_data$Country <- as.character(doctor_data$Country)
+doctor_data <- droplevels(doctor_data)
+doctor_data$majority_gender <- as.factor(doctor_data$majority_gender)
+```
+
+<b style="color:#000000";>3. Join data to map</b>
+
+We'll use the `merge` function from the `sp` package to add our doctor data onto the map shapefiles. 
+
+```r
+data_for_mapping <- sp::merge(uk_countries,
+                              doctor_data,
+                              by.x = 'SUBUNIT',
+                              by.y = 'Country',
+                              duplicateGeoms = TRUE)
+
+```
+
+
+<b style="color:#000000";>4. Build map components and final map</b>
+
+Let's build this map up from the ground up. If we run the most basic of maps with our data, we'll get back the below blue UK country shapefiles. We can see the outlines, but it's ugly and grey and we've still got lots more to do.
+
+```r
+leaflet(data_for_mapping) %>%
+  addPolygons()
+```
+
+```{r, echo = FALSE, warning = FALSE, fig.height = 4.5, fig.width=5}
+leaflet(data_for_mapping) %>%
+  addPolygons()
+```
 
 \n
 
+<b style="color:#8E44AD";>Bring it all together...</b>
 
+```r
+leaflet(data_for_mapping,
+        options=leafletOptions(attributionControl = FALSE, 
+                               dragging = FALSE, zoomControl = FALSE, minZoom = 5.2, maxZoom = 5.2)) %>%
+  addPolygons(fillColor=~map_pal(data_for_mapping$majority_gender),
+              weight = 1,
+              label = ~hoverText,
+              color = "grey",
+              labelOptions = labelOptions(
+                offset = c(-100,-140),
+                #direction='bottom',
+                textOnly = T,
+                style=list(
+                  'background'='rgba(255,255,255,0.95)',
+                  'border-color' = 'rgba(0,0,0,1)',
+                  'border-radius' = '4px',
+                  'border-style' = 'solid',
+                  'border-width' = '4px')),
+              highlightOptions = highlightOptions(weight = 3, bringToFront = TRUE)) %>%
+  setMaxBounds(lat1 = 60, lng1 = 8.05, lat2 = 50, lng2 = -15.) %>%
+  htmlwidgets::onRender(
+    "function(el, t) {
+    var myMap = this;
+    // get rid of the ugly grey background
+    myMap._container.style['background'] = '#ffffff';
+    }") 
+```
+
+```{r, echo = FALSE, warning = FALSE, fig.height = 7.5, fig.width=5}
+map_2
+```
+
+
+```r
+session_info()
+```
 \n
 
 \n
