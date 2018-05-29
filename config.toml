@@ -14,10 +14,10 @@ min_version = 0.20
   style = "blue"
   ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   description = "Describe your website"
-  copyright = "&copy;2016 Your name or company"
+  copyright = "&copy;2018 Tom Franklin"
   sidebarAbout = [
-    "I am a statistician, data science enthusiast and economics graduate based in Manchecter, UK. I work for the Department for Education in Manchester and teach R for data science at Univeristy of Manchester.",
-    "United Kingdom"
+    "Data science enthusiast and economics graduate, working at the for the Department for Education as a statistician in Manchester, UK.",
+    "All views in this personal website are my own and do not reflect the views of my employer.",
   ]
   # Contact page
      # Since this template is static, the contact form uses www.formspree.io as a
@@ -47,8 +47,6 @@ min_version = 0.20
   url = "contact/"
 
   [params.social]
-  email         = "email@example.com"
-  twitter       = "full profile url in twitter"
-  linkedin      = "full profile url in linkedin"
-  stackoverflow = "full profile url in stackoverflow"
-  github        = "full profile url in github"
+  email         = "contact@tomfranklin.co.uk"
+  linkedin      = "www.linkedin.com/in/tom-franklin-stats"
+  github        = "https://github.com/TomFranklin"

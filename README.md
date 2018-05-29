@@ -15,3 +15,5 @@ Personal website of Tom Franklin
 library(blogdown)
 blogdown::build_site()
 blogdown::serve_site()
+
+blogdown::hugo_version()
