@@ -14,9 +14,6 @@ knitr::include_graphics("/img/portfolio/favicon_img.png")
 ```
 
 
-
-
-
  \n
 I'm a big fan of blogdown. It's tricky to set up in the first place getting a theme right and deploying it (with the help of Amber Thomas's [fantastic blog](http://amber.rbind.io/blog/2016/12/19/creatingsite/)), but I'm really impresed with how flexible it is. 
 
@@ -24,7 +21,13 @@ With my new blogdown, I decided I wanted to change the default icon that appears
 
 <font size="5"><b style="color:#8E44AD";>1.  Find an image you'd like to have as your favicon</b></font>
 
-Now go to a website that can turn your image into the `favico.ico` format. I used the [favicon-generator](https://www.favicon-generator.org/) and for this blog post, I've just used an MIT licensed logo [found here on pixabay](https://pixabay.com/en/copyright-free-logo-cc0-license-pd-31208/). Now move this file over to this part of your folder structure and save: 
+Now go to a website that can turn your image into the `favico.ico` format. I used the [favicon-generator](https://www.favicon-generator.org/) and for this blog post, I've just used an MIT licensed logo [found here on pixabay](https://pixabay.com/en/copyright-free-logo-cc0-license-pd-31208/). 
+
+```{r echo = FALSE, out.width = "100%", fig.align = "center"}
+knitr::include_graphics("/img/fav_generator.png")
+```
+   
+Now move this file over to this part of your folder structure and save: 
 
 `your_blog_name/static/img`
 
