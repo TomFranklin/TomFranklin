@@ -24,7 +24,7 @@ With my new blogdown, I decided I wanted to change the default icon that appears
 
 <font size="5"><b style="color:#8E44AD";>1.  Find an image you'd like to have as your favicon</b></font>
 
-Now go to a website that can turn your image into the `favico.ico` format. I used the [favicon-generator](https://www.favicon-generator.org/) and for this blog, I've just used an MIT licensed logo [found here on pixabay](https://pixabay.com/en/copyright-free-logo-cc0-license-pd-31208/). Now move this file over to this part of your folder structure and save: 
+Now go to a website that can turn your image into the `favico.ico` format. I used the [favicon-generator](https://www.favicon-generator.org/) and for this blog post, I've just used an MIT licensed logo [found here on pixabay](https://pixabay.com/en/copyright-free-logo-cc0-license-pd-31208/). Now move this file over to this part of your folder structure and save: 
 
 `your_blog_name/static/img`
 
