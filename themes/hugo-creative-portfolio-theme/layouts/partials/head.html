@@ -33,3 +33,8 @@
   <link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
 {{ end }}
 {{ template "_internal/google_analytics_async.html" . }}
+
+<!-- Custom syntax highlighting for code -->
+<link rel="stylesheet" href="{{"css/mono-blue.css" | absURL}}" rel="stylesheet" id="theme-stylesheet">
+<script src="{{ "js/highlight.pack.js" | absURL }}"></script>
+<script>hljs.initHighlightingOnLoad();</script>

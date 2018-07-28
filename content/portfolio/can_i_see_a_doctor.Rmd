@@ -1,6 +1,6 @@
 ---
 date: "2018-05-23"
-title: "Women doctors outnumber men; in only one UK country..."
+title: "Women doctors outnumber men in only one UK country..."
 description: "Analysing the gender ratio of licensed doctors across UK countries"
 draft: false
 author: "Tom Franklin"
